@@ -79,16 +79,22 @@ export default function Home() {
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
 
-     
+      {/* Floating Text Badges */}
+      <motion.div
+        className="absolute top-16 left-16 px-4 py-2 bg-white rounded-full shadow-lg text-sm font-semibold"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      >
+        ⭐ 5-Star Chefs
+      </motion.div>
 
-
-      {/* <motion.div
+      <motion.div
         className="absolute bottom-16 right-16 px-4 py-2 bg-white rounded-full shadow-lg text-sm font-semibold"
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 3, repeat: Infinity }}
       >
         🍝 Authentic Recipes
-      </motion.div> */}
+      </motion.div>
     </main>
   );
 }
