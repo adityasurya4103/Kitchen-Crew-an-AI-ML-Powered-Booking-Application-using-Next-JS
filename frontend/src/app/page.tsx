@@ -10,10 +10,59 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Home() {
+  const [showDropdown, setShowDropdown] = useState(false);
   return (
     <main className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 flex flex-col items-center justify-center relative overflow-hidden">
+
+      {/* ✅ TOP NAVBAR */}
+      <div className="absolute top-6 right-8 flex gap-4">
+        <Link
+          href="/services"
+          className="px-4 py-2 bg-white border border-orange-400 text-orange-500 font-semibold rounded-lg shadow-md hover:bg-orange-100 transition"
+        >
+          Services
+        </Link>
+        {/* ✅ Sign In Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setShowDropdown((prev) => !prev)}
+            className="px-4 py-2 bg-white border border-orange-400 text-orange-500 font-semibold rounded-lg shadow-md hover:bg-orange-100 transition"
+          >
+            Sign In ⬇️
+          </button>
+
+          {showDropdown && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute right-0 mt-2 w-44 bg-white border border-orange-300 rounded-lg shadow-lg"
+            >
+              <Link
+                href="/chef-login"
+                className="block px-4 py-2 hover:bg-orange-100 text-gray-700"
+              >
+                👨‍🍳 Login as Cook
+              </Link>
+              <Link
+                href="/user-login"
+                className="block px-4 py-2 hover:bg-orange-100 text-gray-700"
+              >
+                👤 Login as User
+              </Link>
+            </motion.div>
+          )}
+        </div>
+        <Link
+          href="/signup"
+          className="px-4 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow-md hover:bg-orange-600 transition"
+        >
+          Sign Up
+        </Link>
+      </div>
 
       {/* Floating background circles */}
       <motion.div
