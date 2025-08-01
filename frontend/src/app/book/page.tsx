@@ -96,6 +96,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { mockChefs } from "@/constants/chefs";
 import { Calendar, Clock, Users, Utensils } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const foodImages = [
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
@@ -105,6 +106,8 @@ const foodImages = [
 ];
 
 export default function BookingPage() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     chefId: "",
     date: "",
@@ -115,7 +118,6 @@ export default function BookingPage() {
     instructions: "",
   });
 
-  const [showPopup, setShowPopup] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
   useEffect(() => {
@@ -132,13 +134,16 @@ export default function BookingPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 3000);
+
+    // Optional: Save booking details to localStorage or API before redirect
+    localStorage.setItem("bookingData", JSON.stringify(formData));
+
+    // Redirect to payment page
+    router.push("/payment");
   };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 flex flex-col md:flex-row font-[Poppins]">
-      
       {/* LEFT PANEL */}
       <div className="md:w-1/2 w-full bg-white/80 backdrop-blur-lg shadow-xl p-10">
         <h1 className="text-4xl font-bold mb-6 font-[Playfair_Display] text-orange-600">
@@ -152,6 +157,7 @@ export default function BookingPage() {
             value={formData.chefId}
             onChange={handleChange}
             className="w-full p-4 rounded-xl bg-white/70 border border-orange-200 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+            required
           >
             <option value="">-- Select Chef --</option>
             {mockChefs.map((chef) => (
@@ -170,6 +176,7 @@ export default function BookingPage() {
               value={formData.date}
               onChange={handleChange}
               className="w-full bg-transparent outline-none"
+              required
             />
           </div>
 
@@ -182,6 +189,7 @@ export default function BookingPage() {
               value={formData.time}
               onChange={handleChange}
               className="w-full bg-transparent outline-none"
+              required
             />
           </div>
 
@@ -212,6 +220,7 @@ export default function BookingPage() {
               onChange={handleChange}
               className="w-full bg-transparent outline-none"
               placeholder="Guests"
+              required
             />
           </div>
 
@@ -225,19 +234,31 @@ export default function BookingPage() {
           />
 
           {/* Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            disabled={!formData.chefId}
-            type="submit"
-            className={`py-3 w-full rounded-xl text-lg font-semibold shadow-md transition ${
-              formData.chefId
-                ? "bg-orange-500 hover:bg-orange-600 text-white"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            ✅ Confirm Booking
-          </motion.button>
+          {/* Button */}
+<motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  disabled={
+    !formData.chefId ||
+    !formData.date ||
+    !formData.time ||
+    !formData.mealType ||
+    !formData.guests
+  }
+  type="submit"
+  className={`py-3 w-full rounded-xl text-lg font-semibold shadow-md transition ${
+    !formData.chefId ||
+    !formData.date ||
+    !formData.time ||
+    !formData.mealType ||
+    !formData.guests
+      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+      : "bg-orange-500 hover:bg-orange-600 text-white"
+  }`}
+>
+  ✅ Confirm Booking
+</motion.button>
+
         </form>
       </div>
 
@@ -256,20 +277,6 @@ export default function BookingPage() {
           />
         </AnimatePresence>
       </div>
-
-      {/* POPUP */}
-      <AnimatePresence>
-        {showPopup && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed top-10 right-10 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg"
-          >
-            🎉 Booking Confirmed!
-          </motion.div>
-        )}
-      </AnimatePresence>
     </main>
   );
 }
